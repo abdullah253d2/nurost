@@ -7,34 +7,34 @@ import AnimatedCounter from "@/components/shared/AnimatedCounter";
 const stats = [
   {
     icon: Rocket,
-    value: 500,
+    value: 15,
     suffix: "+",
-    label: "Projects Shipped",
-    description: "Production apps, SaaS platforms, and digital transformations delivered.",
+    label: "Products Shipped",
+    description: "Web apps, mobile platforms, and SaaS tools delivered to production.",
     color: "#2563EB",
   },
   {
     icon: Users,
-    value: 200,
+    value: 50,
     suffix: "+",
-    label: "Clients Worldwide",
-    description: "From pre-seed startups to publicly listed enterprises.",
+    label: "Engineers in Network",
+    description: "On-demand team of vetted developers, designers and QA specialists.",
     color: "#06B6D4",
   },
   {
     icon: Globe,
-    value: 15,
+    value: 3,
     suffix: "+",
     label: "Countries Served",
-    description: "A truly global team delivering local precision.",
+    description: "UK, US, UAE and growing — paid in $, £, and €.",
     color: "#10B981",
   },
   {
     icon: Award,
     value: 8,
-    suffix: "+",
-    label: "Years of Excellence",
-    description: "A decade of consistent quality and client-first delivery.",
+    suffix: "",
+    label: "Years Combined Lead Experience",
+    description: "Senior engineers with real industry backgrounds.",
     color: "#F59E0B",
   },
 ];
@@ -52,11 +52,12 @@ export default function Stats() {
             className="text-4xl md:text-5xl font-bold text-white mb-4"
             style={{ fontFamily: "var(--font-syne, sans-serif)" }}
           >
-            Impact at{" "}
-            <span className="gradient-text">Global Scale</span>
+            Real Experience.{" "}
+            <span className="gradient-text">Real Delivery.</span>
           </h2>
           <p className="text-slate-400 text-lg max-w-xl mx-auto">
-            Numbers that reflect the trust ambitious companies place in us — and the results we deliver.
+            Our team&apos;s combined track record across fintech, e-commerce, healthcare
+            and recruitment platforms.
           </p>
         </SectionReveal>
 

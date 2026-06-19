@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform, type Variants } from "framer-motion";
-import { ArrowRight, Globe, Zap, ShieldCheck, Star } from "lucide-react";
+import { ArrowRight, Globe, Zap, ShieldCheck, Smartphone, Building2 } from "lucide-react";
 import dynamic from "next/dynamic";
 import MagneticButton from "@/components/shared/MagneticButton";
 
@@ -18,13 +18,13 @@ const itemVariants: Variants = {
 };
 
 const floatingBadges = [
-  { icon: Globe, label: "15+ Countries", color: "#06B6D4" },
-  { icon: Zap, label: "500+ Projects", color: "#2563EB" },
-  { icon: ShieldCheck, label: "ISO Certified", color: "#10B981" },
-  { icon: Star, label: "4.9 / 5 Rating", color: "#F59E0B" },
+  { icon: Building2, label: "UK Registered Company", color: "#DC2626" },
+  { icon: Globe, label: "Pakistan · Remote Worldwide", color: "#06B6D4" },
+  { icon: Zap, label: "WEB · Mobile · Cloud", color: "#2563EB" },
+  { icon: ShieldCheck, label: "QA-Certified Delivery", color: "#10B981" },
 ];
 
-const techStack = ["Next.js", "React", "TypeScript", "Python", "AWS", "Flutter", "Figma", "Stripe"];
+const techStack = ["Next.js", "React", "TypeScript", "Laravel", "React Native", "AWS", "Figma"];
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -46,8 +46,10 @@ export default function Hero() {
       {/* Pixel canvas background */}
       <div className="absolute inset-0 z-0">
         <PixelCanvas className="absolute inset-0" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#020617] via-[#020617]/80 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/20 via-transparent to-[#020617]" />
+        {/* left + right vignette */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to right, #020617 0%, transparent 25%, transparent 75%, #020617 100%)" }} />
+        {/* top + bottom fade */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, #020617 0%, transparent 20%, transparent 65%, #020617 100%)" }} />
       </div>
 
       {/* Glow orbs */}
@@ -57,24 +59,24 @@ export default function Hero() {
       {/* Content */}
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="relative z-10 section-container w-full pt-24 pb-16"
+        className="relative z-10 section-container w-full pt-24 pb-16 flex justify-center"
       >
         <motion.div
           variants={containerVariants}
           initial="initial"
           animate="animate"
-          className="max-w-3xl"
+          className="w-full text-center"
         >
           {/* Badge */}
-          <motion.div variants={itemVariants} className="mb-6">
+          {/* <motion.div variants={itemVariants} className="mb-6 flex justify-center">
             <span className="tag-pill">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400" />
               </span>
-              Global Technology & Finance Partner
+              UK Registered · Pakistan Operations · Global Delivery
             </span>
-          </motion.div>
+          </motion.div> */}
 
           {/* Headline */}
           <motion.h1
@@ -82,43 +84,39 @@ export default function Hero() {
             className="text-5xl md:text-7xl font-bold leading-[1.04] tracking-tight mb-5"
             style={{ fontFamily: "var(--font-syne, sans-serif)" }}
           >
-            <span className="block text-slate-100">We Build</span>
-            <span className="block gradient-text">Digital Excellence</span>
-            <span className="block text-slate-400 text-4xl md:text-5xl font-semibold mt-1">
-              That Scales Worldwide.
-            </span>
+            <span className="block text-slate-100">We Build Digital Products</span>
+            <span className="block gradient-text">That Work in the Real World.</span>
           </motion.h1>
 
           {/* Description */}
           <motion.p
             variants={itemVariants}
-            className="text-lg text-slate-400 leading-relaxed max-w-2xl mb-10"
+            className="text-lg text-slate-400 leading-relaxed max-w-2xl mx-auto mb-10"
           >
-            From custom software and AI to financial advisory — NUROST gives ambitious
-            companies a full-service technology and finance team without the full-time cost.
-            200+ clients. 15+ countries. Zero compromises.
+            From web apps to mobile platforms NUROST is a Lahore-based agency delivering
+            production-grade software for clients across the UK, US, and Europe. Honest
+            pricing. Real engineers. Zero fluff.
           </motion.p>
 
           {/* CTAs */}
-          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 mb-14">
+          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-center gap-4 mb-14">
             <MagneticButton variant="primary" onClick={() => scrollTo("#contact")}>
-              Start Your Project <ArrowRight size={17} />
+              Start a Project <ArrowRight size={17} />
             </MagneticButton>
             <MagneticButton variant="secondary" onClick={() => scrollTo("#portfolio")}>
-              View Our Work
+              See Our Work
             </MagneticButton>
           </motion.div>
 
           {/* Stats */}
-          <motion.div
+          {/* <motion.div
             variants={itemVariants}
             className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10"
           >
             {[
-              { value: "500+", label: "Projects Shipped" },
-              { value: "200+", label: "Happy Clients" },
-              { value: "15+", label: "Countries Served" },
-              { value: "8+", label: "Years of Excellence" },
+              { value: "10+", label: "Years Avg Experience" },
+              { value: "15+", label: "Products Shipped" },
+              { value: "5", label: "Domains Served" },
             ].map((stat) => (
               <div key={stat.label} className="glass-card rounded-2xl p-4 text-center">
                 <div
@@ -130,10 +128,10 @@ export default function Hero() {
                 <div className="text-xs text-slate-500 font-medium">{stat.label}</div>
               </div>
             ))}
-          </motion.div>
+          </motion.div> */}
 
           {/* Floating badges */}
-          <motion.div variants={itemVariants} className="flex flex-wrap gap-2.5 mb-10">
+          <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-2.5 mb-10">
             {floatingBadges.map(({ icon: Icon, label, color }) => (
               <div
                 key={label}
@@ -146,7 +144,7 @@ export default function Hero() {
           </motion.div>
 
           {/* Tech stack */}
-          <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-2">
+          {/* <motion.div variants={itemVariants} className="flex flex-wrap justify-center items-center gap-2">
             <span className="text-xs text-slate-600 font-medium uppercase tracking-widest mr-1">
               Built with
             </span>
@@ -158,7 +156,7 @@ export default function Hero() {
                 {tech}
               </span>
             ))}
-          </motion.div>
+          </motion.div> */}
         </motion.div>
       </motion.div>
 

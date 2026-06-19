@@ -9,7 +9,7 @@ import SectionReveal from "@/components/shared/SectionReveal";
 import { cn } from "@/lib/utils";
 
 const categoryColors: Record<string, string> = {
-  Web: "#2563EB", Mobile: "#7C3AED", Branding: "#EC4899", Finance: "#10B981", AI: "#F59E0B",
+  Web: "#2563EB", Mobile: "#7C3AED",
 };
 
 export default function Portfolio() {
@@ -28,17 +28,17 @@ export default function Portfolio() {
             className="text-4xl md:text-5xl font-bold text-white mb-4"
             style={{ fontFamily: "var(--font-syne, sans-serif)" }}
           >
-            Projects That{" "}
-            <span className="gradient-text">Speak for Themselves</span>
+            Projects Built with{" "}
+            <span className="gradient-text">Real Stakes.</span>
           </h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            From fintech platforms to AI pipelines — a curated selection of work we&apos;re
-            proud to put our name on.
+            Selected work from our team&apos;s combined experience across fintech, recruitment,
+            healthcare, and e-commerce.
           </p>
         </SectionReveal>
 
-        {/* Filter tabs */}
-        <SectionReveal delay={0.1} className="flex flex-wrap justify-center gap-2 mb-10">
+        {/* Filter tabs — only shown when there are projects */}
+        {portfolioItems.length > 0 && <SectionReveal delay={0.1} className="flex flex-wrap justify-center gap-2 mb-10">
           {portfolioCategories.map((cat) => (
             <button
               key={cat}
@@ -53,7 +53,27 @@ export default function Portfolio() {
               {cat}
             </button>
           ))}
-        </SectionReveal>
+        </SectionReveal>}
+
+        {/* Empty state */}
+        {portfolioItems.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <div className="w-16 h-16 rounded-2xl glass-card flex items-center justify-center mb-6">
+              <span className="text-2xl">🚧</span>
+            </div>
+            <p className="text-slate-300 text-lg font-semibold mb-2">Portfolio coming soon.</p>
+            <p className="text-slate-500 text-sm max-w-sm leading-relaxed mb-6">
+              We&apos;re compiling our case studies. In the meantime, reach out and we&apos;ll
+              walk you through past work directly.
+            </p>
+            <button
+              onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
+              className="text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors cursor-pointer"
+            >
+              Discuss our experience →
+            </button>
+          </div>
+        )}
 
         {/* Grid */}
         <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

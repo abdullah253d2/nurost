@@ -1,14 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight, Clock } from "lucide-react";
 import { blogPosts } from "@/lib/data/blog";
 import SectionReveal from "@/components/shared/SectionReveal";
 
 const categoryColors: Record<string, string> = {
-  "Product Design": "#7C3AED",
-  "Cloud & DevOps": "#0EA5E9",
-  "AI / ML": "#F59E0B",
+  "React & Next.js": "#2563EB",
+  "Mobile Development": "#7C3AED",
+  "Agency Life": "#10B981",
 };
 
 export default function Blog() {
@@ -34,6 +35,7 @@ export default function Blog() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {blogPosts.map((post, i) => (
             <SectionReveal key={post.id} delay={i * 0.1}>
+              <Link href={`/blog/${post.slug}`} className="block h-full">
               <article className="group glass-card rounded-2xl overflow-hidden card-hover h-full flex flex-col">
                 {/* Cover */}
                 <div className="relative h-48 overflow-hidden">
@@ -61,15 +63,11 @@ export default function Blog() {
                 {/* Body */}
                 <div className="p-6 flex flex-col flex-1">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="relative w-7 h-7 rounded-full overflow-hidden">
-                      <Image
-                        src={post.authorAvatar}
-                        alt={post.author}
-                        fill
-                        className="object-cover"
-                        sizes="28px"
-                        loading="lazy"
-                      />
+                    <div
+                      className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold text-white"
+                      style={{ background: post.authorColor }}
+                    >
+                      {post.authorInitials}
                     </div>
                     <span className="text-xs text-slate-500">{post.author}</span>
                     <span className="text-slate-700">·</span>
@@ -97,6 +95,7 @@ export default function Blog() {
                   </div>
                 </div>
               </article>
+              </Link>
             </SectionReveal>
           ))}
         </div>

@@ -9,9 +9,8 @@ import { cn } from "@/lib/utils";
 
 const navLinks = [
   { label: "Services", href: "#services" },
-  { label: "Work", href: "#portfolio" },
-  { label: "Team", href: "#team" },
   { label: "Pricing", href: "#pricing" },
+  { label: "Team", href: "#team" },
   { label: "Insights", href: "#blog" },
 ];
 
@@ -40,10 +39,10 @@ export default function Navbar() {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
           scrolled
-            ? "glass-strong shadow-2xl shadow-black/20"
-            : "bg-transparent"
+            ? "bg-[#0B0E14]/95 backdrop-blur-xl border-white/8 shadow-2xl shadow-black/50"
+            : "bg-transparent border-transparent"
         )}
       >
         <nav className="section-container flex items-center justify-between h-16 md:h-18">

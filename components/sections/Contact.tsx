@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { Send, Mail, MapPin, Clock, CheckCircle } from "lucide-react";
+import { Send, Mail, MapPin, Clock, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { Turnstile } from "@marsidev/react-turnstile";
 import SectionReveal from "@/components/shared/SectionReveal";
 
 const contactInfo = [
-  { icon: Mail, label: "Email", value: "hello@nurost.dev", href: "mailto:hello@nurost.dev" },
-  { icon: MapPin, label: "Headquarters", value: "Dubai, UAE · NYC, USA · London, UK", href: null },
-  { icon: Clock, label: "Response time", value: "Within 4 business hours", href: null },
+  { icon: Mail,   label: "Email",         value: "support@nurost.com", href: "mailto:support@nurost.com" },
+  { icon: MapPin, label: "Headquarters",  value: "London, UK (Registered) · Lahore, Pakistan (Operations)", href: null },
+  { icon: Clock,  label: "Response time", value: "Within 4 business hours (PKT / GMT+5) · Mon–Fri, 9am–6pm PKT", href: null },
 ];
 
 const services = [
@@ -17,13 +18,47 @@ const services = [
   "Payroll", "Financial Advisory", "Other",
 ];
 
-export default function Contact() {
-  const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", company: "", service: "", message: "" });
+type Status = "idle" | "loading" | "success" | "error";
 
-  const handleSubmit = (e: React.FormEvent) => {
+export default function Contact() {
+  const [form, setForm]       = useState({ name: "", email: "", company: "", service: "", message: "" });
+  const [token, setToken]     = useState<string | null>(null);
+  const [status, setStatus]   = useState<Status>("idle");
+  const [errMsg, setErrMsg]   = useState("");
+  const turnstileRef          = useRef<{ reset: () => void }>(null);
+
+  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    setForm((f) => ({ ...f, [k]: e.target.value }));
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    if (!token) { setErrMsg("Please complete the CAPTCHA."); return; }
+
+    setStatus("loading");
+    setErrMsg("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, token }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setErrMsg(data.error ?? "Something went wrong. Please try again.");
+        setStatus("error");
+        turnstileRef.current?.reset();
+        setToken(null);
+      } else {
+        setStatus("success");
+      }
+    } catch {
+      setErrMsg("Network error. Please check your connection and try again.");
+      setStatus("error");
+      turnstileRef.current?.reset();
+      setToken(null);
+    }
   };
 
   return (
@@ -35,16 +70,17 @@ export default function Contact() {
             className="text-4xl md:text-5xl font-bold text-white mb-4"
             style={{ fontFamily: "var(--font-syne, sans-serif)" }}
           >
-            Let&apos;s Build Something{" "}
-            <span className="gradient-text">Remarkable</span>
+            Let&apos;s Talk About{" "}
+            <span className="gradient-text">Your Project.</span>
           </h2>
           <p className="text-slate-400 text-lg max-w-xl mx-auto">
-            Tell us about your project and we&apos;ll follow up with a tailored proposal within 24 hours.
+            Tell us what you&apos;re building. We&apos;ll respond within 4 business hours with
+            an honest assessment — no hard sell.
           </p>
         </SectionReveal>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 max-w-6xl mx-auto">
-          {/* Contact info sidebar */}
+          {/* Sidebar */}
           <SectionReveal direction="left" className="lg:col-span-2 flex flex-col gap-6">
             {contactInfo.map(({ icon: Icon, label, value, href }) => (
               <div key={label} className="glass-card rounded-2xl p-5 flex items-start gap-4">
@@ -54,9 +90,7 @@ export default function Contact() {
                 <div>
                   <p className="text-xs text-slate-600 font-medium uppercase tracking-wider mb-1">{label}</p>
                   {href ? (
-                    <a href={href} className="text-sm text-slate-300 hover:text-blue-400 transition-colors">
-                      {value}
-                    </a>
+                    <a href={href} className="text-sm text-slate-300 hover:text-blue-400 transition-colors">{value}</a>
                   ) : (
                     <p className="text-sm text-slate-300">{value}</p>
                   )}
@@ -68,11 +102,13 @@ export default function Contact() {
               <h3 className="text-sm font-semibold text-white mb-3">Why companies choose NUROST</h3>
               <ul className="flex flex-col gap-2">
                 {[
-                  "Dedicated project manager",
-                  "Weekly progress reports",
-                  "Fixed-price engagements",
-                  "Full IP ownership transfer",
-                  "Post-launch support included",
+                  "UK registered company — invoice in GBP, EUR or USD",
+                  "You talk directly to the engineers — no account managers",
+                  "Weekly demos so you see progress every sprint",
+                  "Fixed-scope pricing — no surprise invoices",
+                  "Full source code and IP ownership transferred to you",
+                  "Post-launch support included in every project",
+                  "NDA signed before any discussion begins",
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-2 text-xs text-slate-500">
                     <CheckCircle size={12} className="text-emerald-400 flex-shrink-0" />
@@ -85,7 +121,7 @@ export default function Contact() {
 
           {/* Form */}
           <SectionReveal direction="right" className="lg:col-span-3">
-            {submitted ? (
+            {status === "success" ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -101,7 +137,7 @@ export default function Contact() {
                   Message Received!
                 </h3>
                 <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
-                  We&apos;ll review your request and follow up with a tailored proposal within 24 hours.
+                  We&apos;ll review your request and follow up within 4 business hours. Check your inbox for a confirmation.
                 </p>
               </motion.div>
             ) : (
@@ -111,97 +147,94 @@ export default function Contact() {
                 noValidate
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  {/* Name */}
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="name" className="text-xs font-medium text-slate-400 uppercase tracking-wider">
-                      Full Name *
-                    </label>
+                    <label htmlFor="name" className="text-xs font-medium text-slate-400 uppercase tracking-wider">Full Name *</label>
                     <input
-                      id="name"
-                      type="text"
-                      required
-                      value={form.name}
-                      onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                      id="name" type="text" required
+                      value={form.name} onChange={set("name")}
                       placeholder="Jane Smith"
                       className="rounded-xl px-4 py-3 text-sm text-slate-200 placeholder-slate-600 bg-white/4 border border-white/8 focus:border-blue-500/50 focus:outline-none transition-colors"
                     />
                   </div>
-
-                  {/* Email */}
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="email" className="text-xs font-medium text-slate-400 uppercase tracking-wider">
-                      Work Email *
-                    </label>
+                    <label htmlFor="email" className="text-xs font-medium text-slate-400 uppercase tracking-wider">Work Email *</label>
                     <input
-                      id="email"
-                      type="email"
-                      required
-                      value={form.email}
-                      onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                      id="email" type="email" required
+                      value={form.email} onChange={set("email")}
                       placeholder="jane@company.com"
                       className="rounded-xl px-4 py-3 text-sm text-slate-200 placeholder-slate-600 bg-white/4 border border-white/8 focus:border-blue-500/50 focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
 
-                {/* Company */}
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="company" className="text-xs font-medium text-slate-400 uppercase tracking-wider">
-                    Company
-                  </label>
+                  <label htmlFor="company" className="text-xs font-medium text-slate-400 uppercase tracking-wider">Company</label>
                   <input
-                    id="company"
-                    type="text"
-                    value={form.company}
-                    onChange={(e) => setForm((f) => ({ ...f, company: e.target.value }))}
+                    id="company" type="text"
+                    value={form.company} onChange={set("company")}
                     placeholder="Acme Corp"
                     className="rounded-xl px-4 py-3 text-sm text-slate-200 placeholder-slate-600 bg-white/4 border border-white/8 focus:border-blue-500/50 focus:outline-none transition-colors"
                   />
                 </div>
 
-                {/* Service */}
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="service" className="text-xs font-medium text-slate-400 uppercase tracking-wider">
-                    Service Interested In
-                  </label>
+                  <label htmlFor="service" className="text-xs font-medium text-slate-400 uppercase tracking-wider">Service Interested In</label>
                   <select
                     id="service"
-                    value={form.service}
-                    onChange={(e) => setForm((f) => ({ ...f, service: e.target.value }))}
+                    value={form.service} onChange={set("service")}
                     className="rounded-xl px-4 py-3 text-sm text-slate-200 bg-white/4 border border-white/8 focus:border-blue-500/50 focus:outline-none transition-colors appearance-none cursor-pointer"
                   >
                     <option value="" className="bg-slate-900">Select a service</option>
-                    {services.map((s) => (
-                      <option key={s} value={s} className="bg-slate-900">{s}</option>
-                    ))}
+                    {services.map((s) => <option key={s} value={s} className="bg-slate-900">{s}</option>)}
                   </select>
                 </div>
 
-                {/* Message */}
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="message" className="text-xs font-medium text-slate-400 uppercase tracking-wider">
-                    Tell Us About Your Project *
-                  </label>
+                  <label htmlFor="message" className="text-xs font-medium text-slate-400 uppercase tracking-wider">Tell Us About Your Project *</label>
                   <textarea
-                    id="message"
-                    required
-                    rows={4}
-                    value={form.message}
-                    onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
+                    id="message" required rows={4}
+                    value={form.message} onChange={set("message")}
                     placeholder="Briefly describe what you're building, your timeline, and any specific requirements..."
                     className="rounded-xl px-4 py-3 text-sm text-slate-200 placeholder-slate-600 bg-white/4 border border-white/8 focus:border-blue-500/50 focus:outline-none transition-colors resize-none"
                   />
                 </div>
 
+                {/* Turnstile CAPTCHA */}
+                <div className="flex flex-col gap-1.5">
+                  <Turnstile
+                    ref={turnstileRef}
+                    siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                    onSuccess={setToken}
+                    onExpire={() => setToken(null)}
+                    onError={() => { setToken(null); setErrMsg("CAPTCHA failed to load. Please refresh the page."); }}
+                    options={{ theme: "dark", size: "normal" }}
+                  />
+                </div>
+
+                {/* Error message */}
+                {errMsg && (
+                  <div className="flex items-center gap-2 text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
+                    <AlertCircle size={15} className="flex-shrink-0" />
+                    {errMsg}
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="btn-primary justify-center py-4 text-base mt-1"
+                  disabled={status === "loading" || !token}
+                  className="btn-primary justify-center py-4 text-base mt-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Send Message <Send size={16} />
+                  {status === "loading" ? (
+                    <><Loader2 size={16} className="animate-spin" /> Sending…</>
+                  ) : (
+                    <>Send Message <Send size={16} /></>
+                  )}
                 </button>
 
                 <p className="text-xs text-slate-600 text-center">
-                  By submitting you agree to our privacy policy. We never share your data.
+                  By submitting you agree to our{" "}
+                  <a href="/privacy-policy" className="text-slate-500 hover:text-slate-400 transition-colors underline underline-offset-2">privacy policy</a>.
+                  We never share your data.
                 </p>
               </form>
             )}
