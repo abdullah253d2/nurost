@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Send, Mail, MapPin, Clock, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
-import { Turnstile } from "@marsidev/react-turnstile";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import SectionReveal from "@/components/shared/SectionReveal";
 
 const contactInfo = [
@@ -25,7 +25,7 @@ export default function Contact() {
   const [token, setToken]     = useState<string | null>(null);
   const [status, setStatus]   = useState<Status>("idle");
   const [errMsg, setErrMsg]   = useState("");
-  const turnstileRef          = useRef<{ reset: () => void }>(null);
+  const turnstileRef          = useRef<TurnstileInstance>(null);
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
