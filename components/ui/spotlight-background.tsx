@@ -1,15 +1,15 @@
 "use client";
 
 import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, type Transition, type TargetAndTransition } from "framer-motion";
 
 interface SpotlightProps {
   color: string;
   size: number;
   blur: number;
   style?: React.CSSProperties;
-  animate: object;
-  transition: object;
+  animate: TargetAndTransition;
+  transition: Transition;
 }
 
 function Spotlight({ color, size, blur, style, animate, transition }: SpotlightProps) {
