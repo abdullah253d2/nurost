@@ -22,6 +22,7 @@ async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
     }),
   });
   const data = await res.json();
+  console.log("[turnstile] secret present:", !!process.env.TURNSTILE_SECRET_KEY, "prefix:", process.env.TURNSTILE_SECRET_KEY?.slice(0, 6));
   console.log("[turnstile] siteverify response:", JSON.stringify(data));
   return data.success === true;
 }
