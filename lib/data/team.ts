@@ -135,6 +135,18 @@ export const team: TeamMember[] = [
     skills: ["Project Management", "Scrum", "Stakeholder Management"],
   },
   {
+    id: "tm13",
+    name: "Muhammad Anas Rizvi",
+    role: "Co-Founder & Software Engineer",
+    bio: "Software Engineer at 2B Vision Technologies building a dynamic Laboratory Information System (LIS) for US-based medical labs — managing patient records, test workflows, and real-time data processing. Full-stack MERN developer with experience across React, Node.js, Express, MongoDB, AWS, and Azure DevOps. Samsung AI/ML certified. University of Central Punjab — BS Computer Science.",
+    avatar: "",
+    initials: "MR",
+    avatarColor: "#DC2626",
+    linkedin: "",
+    github: "https://github.com/anasshah668",
+    skills: ["React.js", "Node.js", "MongoDB"],
+  },
+  {
     id: "tm12",
     name: "Wardah Jawad",
     role: "Project Coordinator",
