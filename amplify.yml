@@ -8,9 +8,7 @@ frontend:
         - pnpm install --frozen-lockfile
     build:
       commands:
-        - echo "TURNSTILE_SECRET_KEY=$TURNSTILE_SECRET_KEY" >> .env.production.local
-        - echo "ZOHO_USER=$ZOHO_USER" >> .env.production.local
-        - echo "ZOHO_APP_PASSWORD=$ZOHO_APP_PASSWORD" >> .env.production.local
+        - printf 'export const turnstileSecretKey = "%s";\nexport const zohoUser = "%s";\nexport const zohoAppPassword = "%s";\n' "$TURNSTILE_SECRET_KEY" "$ZOHO_USER" "$ZOHO_APP_PASSWORD" > lib/runtime-config.ts
         - pnpm run build
   artifacts:
     baseDirectory: .next

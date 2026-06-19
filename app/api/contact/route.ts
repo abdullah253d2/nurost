@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { turnstileSecretKey, zohoUser, zohoAppPassword } from "@/lib/runtime-config";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.zoho.com",
   port: 465,
   secure: true,
   auth: {
-    user: process.env.ZOHO_USER,
-    pass: process.env.ZOHO_APP_PASSWORD,
+    user: zohoUser,
+    pass: zohoAppPassword,
   },
 });
 
@@ -16,7 +17,7 @@ async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
-      secret: process.env.TURNSTILE_SECRET_KEY!,
+      secret: turnstileSecretKey,
       response: token,
       remoteip: ip,
     }),
@@ -46,8 +47,8 @@ export async function POST(req: NextRequest) {
 
     // Send notification email to NUROST
     await transporter.sendMail({
-      from: `"NUROST Contact Form" <${process.env.ZOHO_USER}>`,
-      to: process.env.ZOHO_USER,
+      from: `"NUROST Contact Form" <${zohoUser}>`,
+      to: zohoUser,
       replyTo: email,
       subject: `New Enquiry from ${name}${company ? ` · ${company}` : ""}`,
       html: `
@@ -76,7 +77,7 @@ export async function POST(req: NextRequest) {
 
     // Send confirmation email to the enquirer
     await transporter.sendMail({
-      from: `"NUROST" <${process.env.ZOHO_USER}>`,
+      from: `"NUROST" <${zohoUser}>`,
       to: email,
       subject: "We received your message — NUROST",
       html: `
