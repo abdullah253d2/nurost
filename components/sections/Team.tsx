@@ -36,7 +36,7 @@ export default function Team() {
 
         <SectionReveal delay={0.3} className="text-center mt-10">
           <p className="text-sm text-slate-500">
-            More team members joining soon — growing to 15+ by Q3 2025.
+            More team members joining soon — growing to 25+ by 2027.
           </p>
         </SectionReveal>
       </div>
