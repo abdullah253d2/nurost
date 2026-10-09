@@ -7,7 +7,7 @@ import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import SectionReveal from "@/components/shared/SectionReveal";
 
 const contactInfo = [
-  { icon: Mail,   label: "Email",         value: "support@nurost.com", href: "mailto:support@nurost.com" },
+  { icon: Mail,   label: "Email",         value: "business@nurost.com", href: "mailto:business@nurost.com" },
   { icon: MapPin, label: "Headquarters",  value: "London, UK (Registered) · Lahore, Pakistan (Operations)", href: null },
   { icon: Clock,  label: "Response time", value: "Within 4 business hours (PKT / GMT+5) · Mon–Fri, 9am–6pm PKT", href: null },
 ];
